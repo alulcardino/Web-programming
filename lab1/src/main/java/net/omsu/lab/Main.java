@@ -1,4 +1,4 @@
-package net.omsu.firstlab;
+package net.omsu.lab;
 
 import picocli.CommandLine;
 import java.io.IOException;

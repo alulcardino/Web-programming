@@ -1,4 +1,4 @@
-package net.omsu.firstlab.request;
+package net.omsu.lab.request;
 
 import java.io.File;
 import java.net.URL;

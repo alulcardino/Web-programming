@@ -1,9 +1,8 @@
-package net.omsu.firstlab;
+package net.omsu.lab;
 
-import net.omsu.firstlab.request.IRequest;
-import net.omsu.firstlab.request.RequestSocket;
-import net.omsu.firstlab.request.RequestURL;
-import picocli.CommandLine.Command;
+import net.omsu.lab.request.IRequest;
+import net.omsu.lab.request.RequestSocket;
+import net.omsu.lab.request.RequestURL;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
