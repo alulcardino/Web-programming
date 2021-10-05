@@ -1,0 +1,130 @@
+body {
+    margin: 0;
+    font-family: "Roboto";  
+	font-style: normal; 
+	font-weight: normal; 
+}
+
+header {
+	width: 1000px;
+    height: 250px;
+    background: #1d8d30;
+	position: fixed;
+    left: calc(50vw - 500px);
+    z-index: 1;
+}
+
+header img {
+    width: 200px;
+    height: 200px;
+    margin-top: 29px;
+    margin-left: 412px;
+}
+
+nav {
+    position: fixed;
+    width: 150px;
+    padding: 10px;
+    top: 250px;  
+    background: #1b4b4b;
+    left: calc(50vw - 500px);
+}
+
+.menu {
+    width: 150px; 
+}
+
+.menu a {
+    background-color: #617951; 
+    color: #001e43; 
+    display: block; 
+    padding: 12px; 
+    text-decoration: none; 
+}
+
+.menu a:hover {
+    background-color: #92F4A5; 
+}
+
+.menu a.active {
+    background-color: #4CAF50; 
+    color: white;
+}
+
+main {
+    font-family: "ContentFont";
+    position: fixed;
+    width: 770px;
+    padding: 10px 30px;
+    background: #bbaeae; 
+    color: #264872;
+    top: 250px;
+    left: calc(50vw - 330px);
+    bottom: 40px;
+    overflow: auto;
+}
+
+.container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.field {
+    position: relative;
+    background-color: #BE96F8;
+}
+
+.record {
+    margin-left: 20px;
+    padding: 10px;
+    width: 400px;
+    background-color: #ffffff;
+}
+
+.field table {
+    border: 3px solid rgb(253, 76, 6);
+    width: 300px;
+    height: 300px;
+    border-collapse: collapse;
+}
+
+.field td {
+    border: 3px solid rgb(231, 47, 1);
+    padding-bottom: -5px;
+    width: 25px;
+    height: 25px;
+    line-height: 0;
+}
+
+.cellwhite {
+    background-color: #FFFFFF;
+}
+
+.cellblack {
+    background-color: #000000;
+}
+
+.field img {
+    width: inherit;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 1000px; 
+    height: 40px;
+    left: calc(50vw - 500px);
+    background: #444; 
+    color: #fff; 
+    margin-right: auto; 
+    margin-left: auto; 
+    text-align: center;
+}
+
+.footer_text {
+    position: relative;
+    transform: translate(0%, -50%);
+    top: 50%;
+}
