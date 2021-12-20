@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Играть</title>
+	<title>Wawки</title>
 	<meta charset="utf-8"/>
-	<script src="../scripts/script.js"></script>
 	<link rel="shortcut icon" href="../images/icon.png" type="image/png">
 	<link rel="stylesheet" type="text/css" href="../styles/style.css">
+	<script src="../scripts/script.js"></script>
 </head>
-<body onload="start()">
+<body onload="begin()">
 	<header>
 		<div class="logo">
 			<img src="../images/logo.png"/>
@@ -20,149 +20,164 @@
 			<a href="rules.html">Правила</a>
 			<a href="play.html" class="active">Играть</a>
 		</div>
-		<div class="buttons">
-			<div>
-				<button onclick="start()">Начало</button>
-				<button onclick="example_first()">Пример 1</button>	
+		<div class="arrangement_button">
+			<div class="buttons">
+				<button onclick="begin()">Начало</button>
+				<button onclick="example_first()">Пример 1</button>
+				<br>
+				<br>
+				<button onclick="complete_step()" id="complete_button">Завершить ход</button>	
+				<br>
+				<br>
+				<button onclick="cansel_step()" id="cansel_button">Отменить ход</button>	
 			</div>
 		</div>
 	</nav>
 
 	<main>
-		<div class="container">
-			<div class="field">
-				<table>
-					<tr>
-						<th></th>
-						<th>a</th>
-						<th>b</th>
-						<th>c</th>
-						<th>d</th>
-						<th>e</th>
-						<th>f</th>
-						<th>g</th>
-						<th>h</th>
-						<th></th>
-					</tr>
-					<tr>
-						<th>8</th>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<th>8</th>
-					</tr>
-					<tr>
-						<th>7</th>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<td class="cellwhite"></td>
-						<th>7</th>
-					</tr>
-					<tr>
-						<th>6</th>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_black.png"/></td>
-						<th>6</th>
-					</tr>
-					<tr>
-						<th>5</th>
-						<td class="cellblack"></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"></td>
-						<td class="cellwhite"></td>
-						<th>5</th>
-					</tr>
-					<tr>
-						<th>4</th>
-						<td class="cellwhite"></td>
-						<td class="cellblack"></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"></td>
-						<th>4</th>
-					</tr>
-					<tr>
-						<th>3</th>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<td class="cellwhite"></td>
-						<th>3</th>
-					</tr>
-					<tr>
-						<th>2</th>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<th>2</th>
-					</tr>
-					<tr>
-						<th>1</th>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<td class="cellwhite"></td>
-						<td class="cellblack"><img src="../images/check_white.png"/></td>
-						<td class="cellwhite"></td>
-						<th>1</th>
-					</tr>
-					<tr>
-						<th></th>
-						<th>a</th>
-						<th>b</th>
-						<th>c</th>
-						<th>d</th>
-						<th>e</th>
-						<th>f</th>
-						<th>g</th>
-						<th>h</th>
-						<th></th>
-					</tr>
-				</table>
-			</div>
-			<div class="record">
-				Запись партии:
+		<div class="main_container">
+			<div class="step"><span class="step_text">Ход БЕЛЫХ</span></div>
+			<div class="container">
+				<div class="field">
+					<table>
+						<tr>
+							<th></th>
+							<th>a</th>
+							<th>b</th>
+							<th>c</th>
+							<th>d</th>
+							<th>e</th>
+							<th>f</th>
+							<th>g</th>
+							<th>h</th>
+							<th></th>
+						</tr>
+						<tr>
+							<th>8</th>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<th>8</th>
+						</tr>
+						<tr>
+							<th>7</th>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<th>7</th>
+						</tr>
+						<tr>
+							<th>6</th>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<th>6</th>
+						</tr>
+						<tr>
+							<th>5</th>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<th>5</th>
+						</tr>
+						<tr>
+							<th>4</th>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<th>4</th>
+						</tr>
+						<tr>
+							<th>3</th>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<th>3</th>
+						</tr>
+						<tr>
+							<th>2</th>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<th>2</th>
+						</tr>
+						<tr>
+							<th>1</th>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<td class="cellblack"></td>
+							<td class="cellwhite"></td>
+							<th>1</th>
+						</tr>
+						<tr>
+							<th></th>
+							<th>a</th>
+							<th>b</th>
+							<th>c</th>
+							<th>d</th>
+							<th>e</th>
+							<th>f</th>
+							<th>g</th>
+							<th>h</th>
+							<th></th>
+						</tr>
+					</table>
+				</div>
+				<div class="record">
+					Запись партии:
+					<table id="record_table" border="1">
+						<tr>
+							<th>Белые</th>
+							<th>Черные</th>
+						</tr>
+					</table>
+				</div>
 			</div>
 		</div>
 	</main>
 
 	<footer>
 		<div class="footer_text">
-			@alulcardin
+			&copy; alulcardin
 		</div>
 	</footer>
 </body>
