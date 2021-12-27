@@ -11,11 +11,290 @@ var delete_list = [];
 var is_win = 0;
 var record = "";
 var end_step = 1;
+var message;
+var enemy_coords = {x : 0, y : 0};
+
+function record_write(exp_arr) {
+	var tbody = document.getElementById("record_table");
+	for(var i = 0; i < exp_arr.length; i++) {
+		if((i + step) % 2 == 0) {
+		    var row = document.createElement("TR");
+		    var td1 = document.createElement("TD");
+		    td1.appendChild(document.createTextNode(exp_arr[i]));
+		    var td2 = document.createElement("TD");
+		    row.appendChild(td1);
+		    row.appendChild(td2);
+		    tbody.appendChild(row);
+		} else {
+			var lastRow = tbody.rows.length - 1;
+			var td2 = document.getElementById("record_table").rows[lastRow].getElementsByTagName("TD")[1];
+			td2.appendChild(document.createTextNode(exp_arr[i]));
+		}
+	}
+}
+
+function cut_handler(arr, color) {
+	must = 0;
+	var arr1 = cell_parser(arr[0]);
+	var arr2;
+	if(checkers[arr1.i][arr1.j] % 2 != color) {
+		message = "Неподходящий цвет шашки (" + arr[0] + ")";
+		return false;
+	}
+	for(var i = 1; i < arr.length; i++) {
+		arr2 = cell_parser(arr[i]);
+		if(arr[i - 1] === arr[i]) {
+			message = "Попытка сделать шаг на месте";
+			return false;
+		}
+		if(checkers[arr2.i][arr2.j] != 0) {
+			message = "Место, которое совершается шаг - не пусто (из " + arr[0] + " в " + arr[1] + ")";
+			return false;
+		}
+		if(!obligatory_move(arr1.i, arr1.j, arr2.i, arr2.j, checkers[arr1.i][arr1.j])) {
+			message = "Отсутствует взятие (из " + arr[i-1] + " в " + arr[i] + ")";
+			return false;
+		}
+		must = 1;
+		checkers[arr2.i][arr2.j] = checkers[arr1.i][arr1.j];
+		checkers[arr1.i][arr1.j] = 0;
+		checkers[enemy_coords.x][enemy_coords.y] = 0;
+		if(checkers[arr2.i][arr2.j] <= 2 && arr2.i == 7 - 7*(checkers[arr2.i][arr2.j] % 2)) {
+			checkers[arr2.i][arr2.j] += 2;
+		}
+		arr1 = arr2;
+	}
+	if(obligatory_move(arr1.i, arr1.j, -1, 0, checkers[arr1.i][arr1.j])) {
+		message = "Неполная цепочка взятия (из " + arr[0] + " в " + arr[arr.length-1] + ")";
+		return false;
+	}
+	return true;
+}
+
+function obligatory_move(x, y, x1, y1, color) {
+	for(var k = 0; k <= 8; k += 2) {
+		if(k == 4) {
+			continue;
+		}
+		var vec = {x : k % 3 - 1, y : Math.floor(k / 3) - 1};
+		var i = x;
+		var j = y;
+		var block = 0;
+		for(;i >= 0 && j >= 0 && i <= 7 && j <= 7;) {
+			i += vec.x;
+			j += vec.y;
+			if(i >= 0 && j >= 0 && i <= 7 && j <= 7) {
+				var dir = 1 - (color % 2) * 2;
+				if(checkers[i][j] % 2 != checkers[x][y] % 2 && checkers[i][j] != 0 && block == 0) {
+					if((i == x + dir || i == x - dir || color > 2) 
+						&& !(must_step == 1 && last_vector.x == -Math.sign(i-x) && last_vector.y == -Math.sign(j-y))) {
+						block = 1;
+						enemy_coords.x = i;
+						enemy_coords.y = j;
+						//console.log("ENE " + i + " " + j);
+					}
+				} else if(checkers[i][j] == 0 && block == 1) {
+					if((i == x + 2 || i == x - 2 || color > 2) && ((i == x1 && j == y1) || x1 == -1)) {
+						last_vector.x = Math.sign(i-x);
+						last_vector.y = Math.sign(j-y);
+						//console.log("EM " + i + " " + j);
+						return true;
+					}
+				} else if(checkers[i][j] != 0 && block == 1) {
+					break;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+function step_handler(arr, color) {
+	var arr1 = cell_parser(arr[0]);
+	var arr2 = cell_parser(arr[1]);
+	if(arr[0] === arr[1]) {
+		message = "Попытка сделать шаг на месте";
+		return false;
+	}
+	if(checkers[arr1.i][arr1.j] % 2 != color) {
+		message = "Неподходящий цвет шашки (" + arr[0] + ")";
+		return false;
+	}
+
+	if(checkers[arr2.i][arr2.j] != 0) {
+		message = "Место, которое совершается шаг - не пусто (из " + arr[0] + " в " + arr[1] + ")";
+		return false;
+	}
+
+	if(Math.abs(arr1.i-arr2.i) != Math.abs(arr1.i-arr2.i) ) {
+		message = "Невозможное направление для хода (из " + arr[0] + " в " + arr[1] + ")";
+		return false;
+	}
+
+	if(checkers[arr1.i][arr1.j] < 2) {
+		if(!((arr1.i + (1 - color * 2) == arr2.i && arr1.j + (1 - color * 2) == arr2.j) || (arr1.i + (1 - color * 2) == arr2.i && arr1.j - (1 - color * 2) == arr2.j))) {
+			message = "Шаг совершается не в ту сторону (из " + arr[0] + " в " + arr[1] + ")";
+			return false;
+		}
+	} else {
+		var dir = {i:Math.sign(arr2.i - arr1.i), j:Math.sign(arr2.j - arr1.j)};
+		var n = Math.abs(arr2.i - arr1.i) - 1;
+		for(var i = 0; i < n; i++) {
+			if(checkers[arr1.i + dir.i * i][arr1.j + dir.j * i] != 0) {
+				message = "Попытка пройти дамкой через препядствие (из " + arr[0] + " в " + arr[1] + ")";
+				return false;
+			}
+		}
+	}
+
+	for (var i = 0; i < 8; i++) {
+		for(var j = 0; j < 8; j++) {
+			if(checkers[i][j] % 2 == color && checkers[i][j] != 0) {
+				if(obligatory_move(i, j, -1, 0, checkers[i][j])) {
+					message = "Нельзя делать этот ход, так как на поле есть обязательные для взятия шашки";
+					return false;
+				}
+			}
+		}
+	}
+
+	checkers[arr2.i][arr2.j] = checkers[arr1.i][arr1.j];
+	checkers[arr1.i][arr1.j] = 0;
+	if(checkers[arr2.i][arr2.j] <= 2 && arr2.i == 7 - 7*(checkers[arr2.i][arr2.j] % 2)) {
+		checkers[arr2.i][arr2.j] += 2;
+	}
+	return true;
+}
+
+function cell_parser(str) {
+	var i = 8 - str[1];
+	var j = str.charCodeAt(0) - 65;
+	return {i:i, j:j};
+}
+
+function cell_handler(str) {
+	var coords = cell_parser(str);
+	return coords.i % 2 != coords.j % 2;
+}
+
+function cell_arr_handler(arr) {
+	var valid = true;
+	for(var i = 0; i < arr.length; i++) {
+		if(!cell_handler(arr[i])) {
+			message = arr[i] + " - это белая клетка";
+			valid = false;
+			break;
+		} 
+	}
+	return valid;
+}
+
+function exphandler(str, color) {
+	var re = /[A-H][1-8]/g;
+	var arr = str.match(re);
+	var cut = str.includes(":");
+	if(!cell_arr_handler(arr)) {
+		return false;
+	}
+	if(cut) {
+		return cut_handler(arr, color);
+	} 
+	return step_handler(arr, color);
+}
+
+function show_append() {
+	var local_checkers = 
+			   [[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0]];
+	for(var i = 0; i < 8; i++) {
+		for(var j = 0; j < 8; j++) {
+			local_checkers[i][j] = checkers[i][j];
+		}
+	}
+	if(!show(step + 1, false)) {
+		checkers = local_checkers;
+	}
+}
+
+function show_rewrite() {
+	var local_checkers = checkers;
+	checkers = [[0,2,0,2,0,2,0,2],
+				[2,0,2,0,2,0,2,0],
+				[0,2,0,2,0,2,0,2],
+				[0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0],
+				[1,0,1,0,1,0,1,0],
+				[0,1,0,1,0,1,0,1],
+				[1,0,1,0,1,0,1,0]];
+	step = 0;
+	if(!show(1, true)) {
+		checkers = local_checkers;
+	}
+}
+
+function show(k, rewrite) {
+	var text = document.getElementsByClassName("input_record_field")[0].value;
+	var re = /(\s(([a-hA-H][1-8]-[a-hA-H][1-8])|([a-hA-H][1-8]((:[a-hA-H][1-8])+)))|^(([a-hA-H][1-8]-[a-hA-H][1-8])|([a-hA-H][1-8]((:[a-hA-H][1-8])+))))/g;
+	var exec_array;
+	var index = 0;
+	var i = k;
+	var error = false;
+	var exp_arr = [];
+	exec_array = re.exec(text);
+	if(!exec_array) {
+		error = true;
+		message = "Некорректные данные в поле";
+	}
+	while(exec_array) {
+		var new_index = exec_array.index;
+		if(index != new_index) {
+			message = "Ошибка парсинга, ошибка с разделителями";
+			error = true;
+			break;
+		}
+		index = re.lastIndex;
+		error = !exphandler(exec_array[0].trim().toUpperCase(), i % 2);
+		exp_arr.push(exec_array[0].trim().toUpperCase());
+		if(error) {
+			break;
+		}
+		exec_array = re.exec(text);
+		i++;
+	}
+	if(error) {
+		alert(message);
+		return false;
+	} else {
+		if(rewrite) {
+			var rows = document.getElementById("record_table").rows;
+			for (var j = rows.length - 1; j >= 1 ; j--) {
+				rows[j].remove();
+			}
+		}
+		record_write(exp_arr);
+		clear();
+		step = i % 2;
+		arrange();
+		take_step();
+		document.getElementsByClassName("input_record_field")[0].value = "";
+		return true;
+	}
+}
 
 function begin() {
 	document.getElementById("complete_button").disabled = true;
 	document.getElementById("cansel_button").disabled = true;
 	clear();
+	var rows = document.getElementById("record_table").rows;
+	for (var i = rows.length - 1; i >= 1 ; i--) {
+		rows[i].remove();
+	}
 	checkers = [[0,2,0,2,0,2,0,2],
 				[2,0,2,0,2,0,2,0],
 				[0,2,0,2,0,2,0,2],
@@ -31,6 +310,10 @@ function begin() {
 
 function example_first() {
 	clear();
+	var rows = document.getElementById("record_table").rows;
+	for (var i = rows.length - 1; i >= 1 ; i--) {
+		rows[i].remove();
+	}
 	checkers = [[0,2,0,0,0,0,0,0],
 				[0,0,2,0,2,0,0,0],
 				[0,0,0,0,0,0,0,2],
@@ -61,11 +344,6 @@ function clear() {
 			cssText = ``;
 		}
 	}
-
-	var rows = document.getElementById("record_table").rows;
-	for (var i = rows.length - 1; i >= 1 ; i--) {
-		rows[i].remove();
-	}
 }
 
 function get_color(color) {
@@ -83,7 +361,9 @@ function get_color(color) {
 }
 
 function arrange() {
-	is_win = 0;
+	is_prompt = 0; 
+	is_win = 0; 
+	end_step = 1;
 	for(var i = 0; i < 8; i++) {
 		for(var j = 0; j < 8; j++) {
 			if(checkers[i][j] != 0) {
@@ -103,7 +383,7 @@ function choose(name, checker, color) {
 		is_prompt = 1;
 		checker_name = {x : name.x, y : name.y};
 		checker.style.cssText = `padding: 0;
-			border: 0px solid yellow;`;
+			border: 2px solid yellow;`;
 		recalculation(name, checker, color, 0);
 		delete_list.push({cell : checker, x : 8 - name.x, y : name.y, color : color});
 		document.getElementById("complete_button").onclick = function() {complete_step(checker);}
@@ -200,7 +480,7 @@ function clear_styles(priority) {
 
 function move(cell, checker, new_checker_name, enemy, color, enemy_pos) {
 	end_step = 0;
-	button_activate(0);
+	button_activate(false);
 	cell.appendChild(checker);
 	var chessboard_name = chessboard_projection(checker_name);
 	var chessboard_new_name = chessboard_projection(new_checker_name);
@@ -220,7 +500,6 @@ function move(cell, checker, new_checker_name, enemy, color, enemy_pos) {
 		record += "-";
 		record += chessboard_new_name;
 		clear_styles("all");
-		//take_step(new_color);
 		checker.onclick = function() {choose(new_checker_name, this, new_color);}
 	} else {
 		if(record == "") {
@@ -238,7 +517,6 @@ function move(cell, checker, new_checker_name, enemy, color, enemy_pos) {
 		if(!recalculation(copyname, checker, new_color, 1)) {
 			clear_styles("all");
 			must_step = 0;
-			//take_step(new_color);
 		}
 		var cell = document.getElementsByClassName("field")[0].getElementsByTagName("table")[0].rows[8 - enemy_pos.x].getElementsByTagName("td")[enemy_pos.y];
 		while (cell.firstChild) {
@@ -250,7 +528,6 @@ function move(cell, checker, new_checker_name, enemy, color, enemy_pos) {
 
 function take_step() {
 	step = (step + 1) % 2;
-	console.log(step);
 	global_list.splice(0, global_list.length);
 	var win = 0;
 	for(var i = 0; i < 8; i++) {
@@ -284,10 +561,12 @@ function take_step() {
 function button_activate(active) {
 	document.getElementById("complete_button").disabled = active;
 	document.getElementById("cansel_button").disabled = active;
+	document.getElementById("show_rewrite").disabled = !active;
+	document.getElementById("show_append").disabled = !active;
 }
 
 function complete_step(checker) {
-	button_activate(1);
+	button_activate(true);
 	var tbody = document.getElementById("record_table");
 	end_step = 1;
 	is_prompt = 0;
@@ -311,7 +590,7 @@ function complete_step(checker) {
 }
 
 function cansel_step(checker) {
-	button_activate(1);
+	button_activate(true);
 	record = "";
 	end_step = 1;
 	is_prompt = 0;
